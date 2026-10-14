@@ -40,7 +40,7 @@ class RoleManagementController extends Controller
     public function index(Request $request): Response
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 
@@ -61,7 +61,7 @@ class RoleManagementController extends Controller
     public function create(): Response
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 
@@ -74,7 +74,7 @@ class RoleManagementController extends Controller
                 ->where('is_active', true)
                 ->orderBy('name')
                 ->get(['id', 'name', 'foundation_id', 'educational_level']),
-            'foundations' => $context->hasRole('super_admin')
+            'foundations' => (Auth::user() && Auth::user()->isSuperAdmin())
                 ? Foundation::orderBy('name')->get(['id', 'name'])
                 : [],
             'roles' => $this->roles,
@@ -83,7 +83,7 @@ class RoleManagementController extends Controller
                 ->with('school')
                 ->orderBy('start_date', 'desc')
                 ->get(['id', 'name', 'school_id', 'is_active']),
-            'isSuperAdmin' => $context->hasRole('super_admin'),
+            'isSuperAdmin' => (Auth::user() && Auth::user()->isSuperAdmin()),
             'foundationId' => $foundationId,
         ]);
     }
@@ -91,7 +91,7 @@ class RoleManagementController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 
@@ -127,7 +127,7 @@ class RoleManagementController extends Controller
     public function edit(SchoolUser $assignment): RedirectResponse|Response
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 
@@ -155,13 +155,13 @@ class RoleManagementController extends Controller
                 ->where('is_active', true)
                 ->orderBy('name')
                 ->get(['id', 'name', 'foundation_id', 'educational_level']),
-            'foundations' => $context->hasRole('super_admin')
+            'foundations' => (Auth::user() && Auth::user()->isSuperAdmin())
                 ? Foundation::orderBy('name')->get(['id', 'name'])
                 : [],
             'roles' => $this->roles,
             'roleTypes' => $this->roleTypes,
             'academicYears' => $academicYears,
-            'isSuperAdmin' => $context->hasRole('super_admin'),
+            'isSuperAdmin' => (Auth::user() && Auth::user()->isSuperAdmin()),
             'foundationId' => $foundationId,
         ]);
     }
@@ -169,7 +169,7 @@ class RoleManagementController extends Controller
     public function update(SchoolUser $assignment, Request $request): RedirectResponse
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 
@@ -208,7 +208,7 @@ class RoleManagementController extends Controller
     public function destroy(SchoolUser $assignment): RedirectResponse
     {
         $context = app(SchoolContext::class);
-        if (! $context->hasRole(['super_admin', 'foundation_admin'])) {
+        if (! (Auth::user() && (Auth::user()->isSuperAdmin() || Auth::user()->isFoundationAdmin()))) {
             abort(403);
         }
 

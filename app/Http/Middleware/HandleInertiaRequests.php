@@ -68,7 +68,7 @@ class HandleInertiaRequests extends Middleware
                     'slug' => $context->getSchool()->slug,
                 ] : null,
                 'active_role' => $context->getRole(),
-                'is_foundation_level' => $context->isFoundationLevel(),
+                'is_foundation_level' => $user ? ($user->isSuperAdmin() || $user->isFoundationAdmin()) : false,
                 'available_assignments' => $availableAssignments,
             ],
             'flash' => [

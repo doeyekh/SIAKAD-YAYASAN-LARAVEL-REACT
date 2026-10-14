@@ -87,6 +87,7 @@ export default function SidebarLayout({ activePath = 'dashboard' }) {
 
       {/* Navigation Menu */}
       <nav className="flex-1 px-4 py-2 space-y-4">
+        {console.log(auth)}
         {navItems.map((section, idx) => (
           <div key={idx} className="space-y-1">
             <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">

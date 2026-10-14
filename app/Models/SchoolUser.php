@@ -15,6 +15,7 @@ class SchoolUser extends Model
         'school_id',
         'foundation_id',
         'role',
+        'role_type',
         'academic_year_id',
         'is_active',
     ];

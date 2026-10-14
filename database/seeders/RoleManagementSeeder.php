@@ -24,9 +24,9 @@ class RoleManagementSeeder extends Seeder
                 ->value('id');
 
             $user = User::firstOrCreate(
-                ['email' => 'bendahara.' . $school->slug . '@alhikmah.sch.id'],
+                ['email' => 'bendahara.'.$school->slug.'@alhikmah.sch.id'],
                 [
-                    'name' => 'Bendahara ' . $school->name,
+                    'name' => 'Bendahara '.$school->name,
                     'password' => Hash::make('password'),
                     'is_active' => true,
                 ]
@@ -37,6 +37,7 @@ class RoleManagementSeeder extends Seeder
                     'user_id' => $user->id,
                     'school_id' => $school->id,
                     'role' => 'treasurer',
+                    'role_type' => 'school',
                 ],
                 [
                     'foundation_id' => $school->foundation_id,
@@ -50,6 +51,7 @@ class RoleManagementSeeder extends Seeder
                     'user_id' => $user->id,
                     'school_id' => $school->id,
                     'role' => 'school_admin',
+                    'role_type' => 'school',
                 ],
                 [
                     'foundation_id' => $school->foundation_id,

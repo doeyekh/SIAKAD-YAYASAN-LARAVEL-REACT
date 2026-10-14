@@ -30,6 +30,8 @@
 - [x] Tambah menu sidebar `Role & Penugasan`.
 - [x] Tambah seeder `RoleManagementSeeder` untuk akun demo bendahara.
 - [x] Verifikasi akses super admin dan admin yayasan.
+- [x] Tambah field `role_type` pada tabel `school_users`.
+- [x] Tampilkan dan kelola `role_type` pada halaman manajemen role.
 - [x] Tambah `teacher_id` pada tabel `users`.
 - [x] Tambah `academic_year_id` pada tabel `school_users`.
 - [x] `User` memiliki relasi `teacher`.

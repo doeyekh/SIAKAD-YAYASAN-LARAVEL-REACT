@@ -29,6 +29,14 @@ class RoleManagementController extends Controller
         'guardian' => 'Orang Tua / Wali',
     ];
 
+    protected array $roleTypes = [
+        'system' => 'Sistem',
+        'foundation' => 'Yayasan',
+        'school' => 'Sekolah',
+        'student' => 'Siswa',
+        'guardian' => 'Orang Tua / Wali',
+    ];
+
     public function index(Request $request): Response
     {
         $context = app(SchoolContext::class);
@@ -70,6 +78,7 @@ class RoleManagementController extends Controller
                 ? Foundation::orderBy('name')->get(['id', 'name'])
                 : [],
             'roles' => $this->roles,
+            'roleTypes' => $this->roleTypes,
             'academicYears' => AcademicYear::when($foundationId, fn ($q, $foundationId) => $q->whereIn('school_id', School::where('foundation_id', $foundationId)->pluck('id')))
                 ->with('school')
                 ->orderBy('start_date', 'desc')
@@ -92,7 +101,8 @@ class RoleManagementController extends Controller
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'school_id' => ['nullable', 'integer', 'exists:schools,id'],
             'foundation_id' => ['nullable', 'integer', 'exists:foundations,id'],
-            'role' => ['required', 'string', 'in:' . implode(',', array_keys($this->roles))],
+            'role' => ['required', 'string', 'in:'.implode(',', array_keys($this->roles))],
+            'role_type' => ['required', 'string', 'in:'.implode(',', array_keys($this->roleTypes))],
             'academic_year_id' => ['nullable', 'integer', 'exists:academic_years,id'],
             'is_active' => ['boolean'],
         ]);
@@ -106,6 +116,7 @@ class RoleManagementController extends Controller
             'school_id' => $validated['school_id'] ?? null,
             'foundation_id' => $validated['foundation_id'] ?? null,
             'role' => $validated['role'],
+            'role_type' => $validated['role_type'],
             'academic_year_id' => $validated['academic_year_id'] ?? null,
             'is_active' => (bool) ($validated['is_active'] ?? true),
         ]);
@@ -148,6 +159,7 @@ class RoleManagementController extends Controller
                 ? Foundation::orderBy('name')->get(['id', 'name'])
                 : [],
             'roles' => $this->roles,
+            'roleTypes' => $this->roleTypes,
             'academicYears' => $academicYears,
             'isSuperAdmin' => $context->hasRole('super_admin'),
             'foundationId' => $foundationId,
@@ -170,7 +182,8 @@ class RoleManagementController extends Controller
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'school_id' => ['nullable', 'integer', 'exists:schools,id'],
             'foundation_id' => ['nullable', 'integer', 'exists:foundations,id'],
-            'role' => ['required', 'string', 'in:' . implode(',', array_keys($this->roles))],
+            'role' => ['required', 'string', 'in:'.implode(',', array_keys($this->roles))],
+            'role_type' => ['required', 'string', 'in:'.implode(',', array_keys($this->roleTypes))],
             'academic_year_id' => ['nullable', 'integer', 'exists:academic_years,id'],
             'is_active' => ['boolean'],
         ]);
@@ -184,6 +197,7 @@ class RoleManagementController extends Controller
             'school_id' => $validated['school_id'] ?? null,
             'foundation_id' => $validated['foundation_id'] ?? null,
             'role' => $validated['role'],
+            'role_type' => $validated['role_type'],
             'academic_year_id' => $validated['academic_year_id'] ?? null,
             'is_active' => (bool) ($validated['is_active'] ?? true),
         ]);

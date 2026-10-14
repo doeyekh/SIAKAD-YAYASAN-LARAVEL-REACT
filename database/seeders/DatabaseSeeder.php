@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => null,
             'foundation_id' => null,
             'role' => 'super_admin',
+            'role_type' => 'system',
             'is_active' => true,
         ]);
 
@@ -93,6 +94,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => null,
             'foundation_id' => $foundation->id,
             'role' => 'foundation_admin',
+            'role_type' => 'foundation',
             'is_active' => true,
         ]);
 
@@ -109,6 +111,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $sma->id,
             'foundation_id' => $foundation->id,
             'role' => 'principal',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
 
@@ -125,6 +128,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $sma->id,
             'foundation_id' => $foundation->id,
             'role' => 'school_admin',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
 
@@ -141,6 +145,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $sma->id,
             'foundation_id' => $foundation->id,
             'role' => 'teacher',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
         SchoolUser::create([
@@ -148,6 +153,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $sma->id,
             'foundation_id' => $foundation->id,
             'role' => 'homeroom_teacher',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
 
@@ -164,6 +170,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $smp->id,
             'foundation_id' => $foundation->id,
             'role' => 'principal',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
 
@@ -180,6 +187,7 @@ class DatabaseSeeder extends Seeder
             'school_id' => $smp->id,
             'foundation_id' => $foundation->id,
             'role' => 'school_admin',
+            'role_type' => 'school',
             'is_active' => true,
         ]);
 
@@ -383,6 +391,6 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        $this->call(\Database\Seeders\RoleManagementSeeder::class);
+        $this->call(RoleManagementSeeder::class);
     }
 }

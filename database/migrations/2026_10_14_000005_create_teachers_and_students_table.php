@@ -78,7 +78,7 @@ return new class extends Migration
             $table->string('status')->default('enrolled');
             $table->timestamps();
 
-            $table->unique(['student_id', 'classroom_id', 'academic_year_id']);
+            $table->unique(['student_id', 'classroom_id', 'academic_year_id'], 'student_enrollments_unique');
         });
 
         Schema::create('subject_assignments', function (Blueprint $table) {

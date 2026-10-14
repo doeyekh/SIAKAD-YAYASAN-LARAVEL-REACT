@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Head, Link, useForm } from '@inertiajs/react'
 import AdminLayout from '../../../Layouts/Admin/AdminLayout'
 
-export default function RoleAssignmentForm({ assignment, users = [], schools = [], foundations = [], roles = {}, academicYears = [], isSuperAdmin = false, foundationId = null }) {
+export default function RoleAssignmentForm({ assignment, users = [], schools = [], foundations = [], roles = {}, roleTypes = {}, academicYears = [], isSuperAdmin = false, foundationId = null }) {
   const isEditing = !!assignment
   const [selectedSchool, setSelectedSchool] = useState(assignment?.school_id || '')
 
@@ -13,9 +13,21 @@ export default function RoleAssignmentForm({ assignment, users = [], schools = [
     school_id: assignment?.school_id || '',
     foundation_id: assignment?.foundation_id || foundationId || '',
     role: assignment?.role || '',
+    role_type: assignment?.role_type || '',
     academic_year_id: assignment?.academic_year_id || '',
     is_active: assignment?.is_active ?? true,
   })
+
+  const roleTypeMap = {
+    super_admin: 'system',
+    foundation_admin: 'foundation',
+    student: 'student',
+    guardian: 'guardian',
+  }
+  const handleRoleChange = (value) => {
+    setData('role', value)
+    setData('role_type', roleTypeMap[value] || 'school')
+  }
 
   const handleSchoolChange = (value) => {
     setSelectedSchool(value)
@@ -69,13 +81,24 @@ export default function RoleAssignmentForm({ assignment, users = [], schools = [
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Role</label>
-            <select value={data.role} onChange={(e) => setData('role', e.target.value)} className="w-full text-xs rounded-xl border border-slate-200 px-3 py-2 bg-white">
+            <select value={data.role} onChange={(e) => handleRoleChange(e.target.value)} className="w-full text-xs rounded-xl border border-slate-200 px-3 py-2 bg-white">
               <option value="">Pilih role</option>
               {Object.entries(roles).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
             </select>
             {errors.role && <p className="text-[11px] text-rose-500 mt-1">{errors.role}</p>}
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Tipe Role</label>
+            <select value={data.role_type} onChange={(e) => setData('role_type', e.target.value)} className="w-full text-xs rounded-xl border border-slate-200 px-3 py-2 bg-white">
+              <option value="">Pilih tipe role</option>
+              {Object.entries(roleTypes).map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
+            </select>
+            {errors.role_type && <p className="text-[11px] text-rose-500 mt-1">{errors.role_type}</p>}
           </div>
 
           <div>

@@ -47,7 +47,7 @@ class SetSchoolContext
         $superAdminAssignment = $activeAssignments->firstWhere('role', 'super_admin');
 
         if ($superAdminAssignment) {
-            $activeRole = $sessionRole ?: 'super_admin';
+            $activeRole = 'super_admin';
             $activeSchool = $sessionSchoolId ? School::find($sessionSchoolId) : null;
 
             $context->setRole($activeRole);
@@ -60,7 +60,7 @@ class SetSchoolContext
         $foundationAdminAssignment = $activeAssignments->firstWhere('role', 'foundation_admin');
 
         if ($foundationAdminAssignment) {
-            $activeRole = $sessionRole ?: 'foundation_admin';
+            $activeRole = 'foundation_admin';
             $activeSchool = null;
 
             if ($sessionSchoolId) {

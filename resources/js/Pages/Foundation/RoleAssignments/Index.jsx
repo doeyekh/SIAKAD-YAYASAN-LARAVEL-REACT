@@ -29,6 +29,7 @@ export default function RoleAssignmentsIndex({ assignments, filters }) {
               <tr>
                 <th className="py-3 px-4">User</th>
                 <th className="py-3 px-4">Role</th>
+                <th className="py-3 px-4">Tipe Role</th>
                 <th className="py-3 px-4">Sekolah</th>
                 <th className="py-3 px-4">Tahun Ajaran</th>
                 <th className="py-3 px-4">Yayasan ID</th>
@@ -46,6 +47,7 @@ export default function RoleAssignmentsIndex({ assignments, filters }) {
                     <div className="text-[10px] text-slate-400">{item.user?.email}</div>
                   </td>
                   <td className="py-3 px-4">{item.role}</td>
+                  <td className="py-3 px-4">{item.role_type}</td>
                   <td className="py-3 px-4">{item.school?.name || '-'}</td>
                   <td className="py-3 px-4">{item.academic_year?.name || '-'}</td>
                   <td className="py-3 px-4">{item.foundation_id || '-'}</td>

@@ -15,6 +15,7 @@ class SchoolUser extends Model
         'school_id',
         'foundation_id',
         'role',
+        'academic_year_id',
         'is_active',
     ];
 
@@ -52,5 +53,13 @@ class SchoolUser extends Model
     public function foundation(): BelongsTo
     {
         return $this->belongsTo(Foundation::class);
+    }
+
+    /**
+     * Get the academic year for this assignment.
+     */
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class);
     }
 }

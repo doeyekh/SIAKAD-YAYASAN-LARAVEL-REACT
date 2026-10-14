@@ -4,33 +4,32 @@ namespace App\Policies;
 
 use App\Models\Teacher;
 use App\Models\User;
-use App\Services\SchoolContext;
 
 class TeacherPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $this->canManageMasterData();
+        return true;
     }
 
     public function view(User $user, Teacher $teacher): bool
     {
-        return $this->canManageMasterData() && $this->ownsRecord($teacher);
+        return $this->canManageMasterData($user) && $this->ownsRecord($user, $teacher);
     }
 
     public function create(User $user): bool
     {
-        return $this->canManageMasterData();
+        return $this->canManageMasterData($user);
     }
 
     public function update(User $user, Teacher $teacher): bool
     {
-        return $this->canManageMasterData() && $this->ownsRecord($teacher);
+        return $this->canManageMasterData($user) && $this->ownsRecord($user, $teacher);
     }
 
     public function delete(User $user, Teacher $teacher): bool
     {
-        return $this->canManageMasterData() && $this->ownsRecord($teacher);
+        return $this->canManageMasterData($user) && $this->ownsRecord($user, $teacher);
     }
 
     public function restore(User $user, Teacher $teacher): bool
@@ -43,26 +42,16 @@ class TeacherPolicy
         return $this->delete($user, $teacher);
     }
 
-    protected function context(): SchoolContext
+    protected function canManageMasterData(User $user): bool
     {
-        return app(SchoolContext::class);
+        return $user->schoolUsers()
+            ->where('is_active', true)
+            ->whereIn('role', ['super_admin', 'foundation_admin'])
+            ->exists();
     }
 
-    protected function canManageMasterData(): bool
+    protected function ownsRecord(User $user, Teacher $teacher): bool
     {
-        return $this->context()->hasRole(['super_admin', 'foundation_admin', 'principal', 'school_admin']);
-    }
-
-    protected function ownsRecord(Teacher $teacher): bool
-    {
-        $context = $this->context();
-
-        if ($context->isFoundationLevel()) {
-            return true;
-        }
-
-        $schoolId = $context->getSchoolId();
-
-        return $schoolId !== null && (int) $teacher->school_id === (int) $schoolId;
+        return true;
     }
 }

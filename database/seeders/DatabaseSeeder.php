@@ -196,6 +196,8 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ]);
 
+            SchoolUser::where('school_id', $sma->id)->whereNull('academic_year_id')->update(['academic_year_id' => $aySma->id]);
+
             Semester::create([
                 'school_id' => $sma->id,
                 'academic_year_id' => $aySma->id,
@@ -380,5 +382,7 @@ class DatabaseSeeder extends Seeder
                 'status' => 'enrolled',
             ]);
         });
+
+        $this->call(\Database\Seeders\RoleManagementSeeder::class);
     }
 }

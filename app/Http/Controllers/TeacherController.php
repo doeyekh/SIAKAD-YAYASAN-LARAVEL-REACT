@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
 use App\Imports\TeachersImport;
+use App\Models\AcademicYear;
 use App\Models\School;
+use App\Models\SchoolUser;
 use App\Models\Teacher;
+use App\Models\User;
 use App\Services\SchoolContext;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maatwebsite\Excel\Facades\Excel;
@@ -111,9 +116,39 @@ class TeacherController extends Controller
 
         $validated['school_id'] = (int) $schoolId;
 
-        Teacher::create($validated);
+        $school = School::findOrFail((int) $schoolId);
+        $activeAcademicYear = AcademicYear::where('school_id', $school->id)->where('is_active', true)->first();
+        $loginEmail = ! empty($validated['email']) ? (string) $validated['email'] : $this->generateTeacherEmail($school, (string) $validated['full_name'], $validated['nip'] ?? null);
 
-        return redirect()->route('teachers.index')->with('success', 'Data guru berhasil ditambahkan.');
+        $user = User::firstOrCreate(
+            ['email' => $loginEmail],
+            [
+                'name' => $validated['full_name'],
+                'password' => Hash::make('password'),
+                'is_active' => (bool) ($validated['is_active'] ?? true),
+            ]
+        );
+
+        SchoolUser::firstOrCreate(
+            [
+                'user_id' => $user->id,
+                'school_id' => $school->id,
+                'role' => 'teacher',
+            ],
+            [
+                'foundation_id' => $school->foundation_id,
+                'academic_year_id' => $activeAcademicYear?->id,
+                'is_active' => true,
+            ]
+        );
+
+        $validated['user_id'] = $user->id;
+        $validated['email'] = $loginEmail;
+
+        $teacher = Teacher::create($validated);
+        $user->update(['teacher_id' => $teacher->id]);
+
+        return redirect()->route('teachers.index')->with('success', "Data guru berhasil ditambahkan. Akun login: {$loginEmail} (password default: password)");
     }
 
     /**
@@ -206,6 +241,39 @@ class TeacherController extends Controller
 
         Excel::import(new TeachersImport((int) $schoolId), $request->file('file'));
 
-        return redirect()->route('teachers.index')->with('success', 'Import data guru selesai.');
+        Teacher::whereNotNull('user_id')->each(function (Teacher $teacher): void {
+            if ($teacher->user !== null && $teacher->user->teacher_id !== $teacher->id) {
+                $teacher->user->update(['teacher_id' => $teacher->id]);
+            }
+        });
+
+        return redirect()->route('teachers.index')->with('success', 'Import data guru selesai. Akun login default menggunakan password: password');
+    }
+
+    /**
+     * Generate a unique login email when the teacher form does not provide one.
+     */
+    private function generateTeacherEmail(School $school, string $fullName, ?string $nip): string
+    {
+        $slug = Str::slug($fullName, '.');
+        if ($slug === '') {
+            $slug = 'guru';
+        }
+
+        $suffix = $nip ? preg_replace('/\D/', '', $nip) : Str::lower(Str::random(4));
+        if ($suffix === '') {
+            $suffix = Str::lower(Str::random(4));
+        }
+
+        $domain = $school->slug ? $school->slug.'.sch.id' : 'siakad.local';
+        $email = "{$slug}.{$suffix}@{$domain}";
+
+        $counter = 1;
+        while (User::where('email', $email)->exists()) {
+            $email = "{$slug}.{$suffix}.{$counter}@{$domain}";
+            $counter++;
+        }
+
+        return $email;
     }
 }

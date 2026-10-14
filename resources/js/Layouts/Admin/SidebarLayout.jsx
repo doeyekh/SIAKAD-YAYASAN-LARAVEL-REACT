@@ -22,6 +22,7 @@ export default function SidebarLayout({ activePath = 'dashboard' }) {
             items: [
               { name: 'Manajemen Sekolah', href: '/foundation/schools', path: 'foundation-schools', icon: 'domain_add' },
               { name: 'Tahun Ajaran & Semester', href: '/foundation/academic-years', path: 'foundation-academic-years', icon: 'date_range' },
+               { name: 'Role & Penugasan', href: '/foundation/role-assignments', path: 'foundation-role-assignments', icon: 'admin_panel_settings' },
             ],
           },
         ]

@@ -70,10 +70,11 @@ class MasterDataAndStudentsTest extends TestCase
 
     public function test_admin_can_create_and_update_teacher(): void
     {
-        $adminSma = User::where('email', 'admin.sma@alhikmah.sch.id')->firstOrFail();
+        $adminYayasan = User::where('email', 'admin.yayasan@alhikmah.sch.id')->firstOrFail();
         $sma = School::where('slug', 'sma-plus-al-hikmah-1')->firstOrFail();
 
-        $response = $this->actingAs($adminSma)->post('/teachers', [
+        $response = $this->actingAs($adminYayasan)->post('/teachers', [
+            'school_id' => $sma->id,
             'nip' => '198701012015011002',
             'nuptk' => '1234567890123456',
             'full_name' => 'Hendro Prabowo',

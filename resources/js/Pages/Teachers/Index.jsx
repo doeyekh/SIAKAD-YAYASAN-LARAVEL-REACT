@@ -61,23 +61,25 @@ export default function TeachersIndex({ teachers, filters, schools = [], activeS
             Kelola profil pendidik, NIP/NUPTK, penetapan wali kelas, dan pembagian tugas mengajar
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setShowImportModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl shadow-sm hover:bg-slate-50 transition-colors"
-          >
-            <span className="material-symbols-outlined text-sm">upload_file</span>
-            Import Excel
-          </button>
-          <Link
-            href="/teachers/create"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
-          >
-            <span className="material-symbols-outlined text-sm">add</span>
-            Tambah Guru Baru
-          </Link>
-        </div>
+        {isFoundation && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowImportModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl shadow-sm hover:bg-slate-50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">upload_file</span>
+              Import Excel
+            </button>
+            <Link
+              href="/teachers/create"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              Tambah Guru Baru
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Search */}

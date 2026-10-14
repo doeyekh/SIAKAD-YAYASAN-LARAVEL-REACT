@@ -38,6 +38,11 @@ class SetSchoolContext
         $sessionSchoolId = session('active_school_id');
         $sessionRole = session('active_role');
 
+        // Normalize stale session values so invalid roles fall back to safe defaults.
+        if (! in_array($sessionRole, ['super_admin', 'foundation_admin', 'principal', 'school_admin', 'teacher', 'homeroom_teacher', 'treasurer', 'student', 'guardian'], true)) {
+            $sessionRole = null;
+        }
+
         // Check if user has global super admin role
         $superAdminAssignment = $activeAssignments->firstWhere('role', 'super_admin');
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\ContextController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Foundation\AcademicYearManagementController;
+use App\Http\Controllers\Foundation\RoleManagementController;
 use App\Http\Controllers\Foundation\SchoolManagementController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     // Foundation Admin & Global Management
     Route::prefix('foundation')->name('foundation.')->group(function () {
         Route::resource('schools', SchoolManagementController::class);
+        Route::resource('role-assignments', RoleManagementController::class)->parameters(['role-assignments' => 'assignment']);
         Route::get('academic-years', [AcademicYearManagementController::class, 'index'])->name('academic-years.index');
         Route::post('academic-years', [AcademicYearManagementController::class, 'store'])->name('academic-years.store');
         Route::post('academic-years/{academicYear}/activate', [AcademicYearManagementController::class, 'activate'])->name('academic-years.activate');

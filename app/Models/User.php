@@ -24,6 +24,7 @@ class User extends Authenticatable
         'nik',
         'avatar',
         'is_active',
+        'teacher_id',
     ];
 
     protected $hidden = [
@@ -65,9 +66,9 @@ class User extends Authenticatable
     /**
      * Get teacher profile if any.
      */
-    public function teacher(): HasOne
+    public function teacher(): BelongsTo
     {
-        return $this->hasOne(Teacher::class);
+        return $this->belongsTo(Teacher::class);
     }
 
     /**
